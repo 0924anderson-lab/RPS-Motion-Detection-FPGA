@@ -14,6 +14,7 @@ module bram_mem (
 );
 
     // Memory array declaration with M10K style for Quartus synthesis
+    /*
     (* ramstyle = "M10K" *) logic [31:0] mem [0:4095];
 
     always_ff @(posedge clk) begin
@@ -26,6 +27,30 @@ module bram_mem (
     end
 
     always_ff @(posedge clk) begin
+        if (read_en)
+            read_data <= mem[read_addr];
+    end
+    */
+
+    // 4096 words，每個 word 包含 4 個 8-bit bytes
+    (* ramstyle = "M10K" *)
+    logic [3:0][7:0] mem [0:4095];
+
+    always_ff @(posedge clk) begin
+        if (write_en) begin
+            if (byte_en[0])
+                mem[write_addr][0] <= write_data[7:0];
+
+            if (byte_en[1])
+                mem[write_addr][1] <= write_data[15:8];
+
+            if (byte_en[2])
+                mem[write_addr][2] <= write_data[23:16];
+
+            if (byte_en[3])
+                mem[write_addr][3] <= write_data[31:24];
+        end
+
         if (read_en)
             read_data <= mem[read_addr];
     end
