@@ -191,6 +191,8 @@ module fsm (
             SCAN_DONE: next_state = WAIT_HPS_VF_DONE;
             WAIT_HPS_VF_DONE: if (hps_vf_done_reg) next_state = IDLE;
 
+            default: next_state = IDLE;
+
         endcase
     end
 
@@ -439,6 +441,10 @@ module fsm (
             WAIT_HPS_VF_DONE: begin
                 load_sel = 1'b1;
                 scan_en = 1'b1;
+            end
+
+            default: begin
+                
             end
         endcase
     end
